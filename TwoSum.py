@@ -1,46 +1,48 @@
 import logging
-#import input
+import sys
 
 class Solution(object):
-    logging.info("Two sum problem")
-    
     def __init__(self):
         logging.getLogger().setLevel(logging.INFO)
-        logging.basicConfig(format='%(levelname)s:%(message)s')
+        logging.basicConfig(format='%(asctime)s - %(levelname)s: %(message)s', datefmt='%Y-%m-%d %I:%M:%S')
+        print('\n')
+        logging.info("****************** Two sum problem ****************")
         
     def inputs(self):
+        """
+        param: None
+        return: input_list : List for processing
+        return: input_number : Number to target for summation
+        """
         input_number = None
-        #input_list = input("Please enter list of numbers")
-        #number = input("Please enter target number")
-        input_list = [0,3,4,0]
-        number = 0
+        logging.info("Please enter numbers separated by spaces")
+        input_list = (sys.stdin.readline().strip()).split( )
+        logging.info("Please enter 1 target number")
+        number = sys.stdin.readline().strip()
         
-        if isinstance(number,int) or number.isdigit():
+        try:
+            input_number = int(number)
             if isinstance(input_list,list):
-                logging.info("Format valid for input list & target number")
-                input_number = int(number)
-            
-            for i,v in enumerate(input_list):
-                if isinstance(v,int):
-                    pass    
-                elif v.isdigit():
-                    logging.info("Converting string element in list to int")
+                for i, v in enumerate(input_list):
                     input_list[i] = int(v)
-                else:
-                    logging.error("Aborting run - Invalid list provided")
-                    return None, None
-            
-            if input_number < 0 and all(x<0 for x in input_list):
-                logging.info("Special case number & list conversion since both are negative")
-                input_number = abs(input_number)
-                for i,v in enumerate(input_list):
-                    input_list[i] = abs(v) 
-            return input_list,input_number
-        
-        logging.error("Aborting run - Invalid input list or target number provided")
-        return None, None
+        except ValueError:
+            logging.error("Aborting run - Invalid input list or target number provided")
+            logging.info("Please provide a list with numbers only")
+            logging.info("Please provide a a target number that is an integer only")
+            return None, None
+
+        if input_number < 0 and all(x<0 for x in input_list):
+            logging.info("Special case number & list conversion since both are negative")
+            input_number = abs(input_number)
+            input_list = list(abs(x) for x in input_list)
+
+        return input_list,input_number
     
     def twoSum(self, input_list, input_number):
+        """
+        param: List for processing, Number to target for summation
+        return: List of indices whose elements sum to the target 
+        """
         logging.info("Calculating indices for target number")
         rejected_indices = []
         accepted_indices = []
@@ -77,10 +79,9 @@ class Solution(object):
 if __name__ == '__main__':    
     ts = Solution()
     input_list, input_number = ts.inputs()
-    print(input_list)
-    print(input_number)
     if input_list and input_number or input_number==0:
         accepted_indices = ts.twoSum(input_list, input_number)
-        for indice in accepted_indices:
-            logging.info("Here are the indices in your list that add up to your target: {0!s}"
+        if accepted_indices:
+            for indice in accepted_indices:
+                logging.info("Here are the indices in your list that add up to your target: {0!s}"
                     .format(indice))
